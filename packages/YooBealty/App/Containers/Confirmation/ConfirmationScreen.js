@@ -6,6 +6,7 @@ import epos700 from 'react-native-epos700'
 import {simpleDateNow, simpleDateTimeNow} from '../../Lib/Dates'
 import R from 'ramda'
 import './padPolyfill'
+import { NavigationActions } from 'react-navigation'
 
 const format = (value, size) => String(value).substring(0, size).padEnd(size)
 const formatMoney = (value, size) => value.toFixed(2).padStart(size)
@@ -111,7 +112,12 @@ export default class ConfirmationScreen extends Component {
   }
 
   handleNewOrder = () => {
-    this.props.navigation.goBack()
+    //this.props.navigation.goBack()
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'OrderScreen' })],
+    })
+    this.props.navigation.dispatch(resetAction)
   }
 
   render () {
