@@ -66,7 +66,6 @@ export default class SplitScreen extends Component {
       func1: totalValue,
       func2: 0,
       func3: 0,
-      func4: 0,
     }
   }
 
@@ -81,6 +80,7 @@ export default class SplitScreen extends Component {
     if (order.method === 'MONEY') {
       this.props.navigation.navigate('ConfirmationScreen', {
         order: {
+          total: totalValue,
           ...order,
           split
         }
@@ -91,6 +91,7 @@ export default class SplitScreen extends Component {
       totalValue,
       order: {
         ...order,
+        total: totalValue,
         split
       }
     })
@@ -146,12 +147,6 @@ export default class SplitScreen extends Component {
             onChange={this.recalculate('func3')}
             nome='Cleide'
             image={Images.func3}/>
-          <EmployeSplit 
-            value={func4}
-            maxValue={totalValue}
-            onChange={this.recalculate('func4')}
-            nome='Carla'
-            image={Images.func4}/>
           <View style={{borderWidth: 0.8, borderColor: Colors.lightGrey2, marginHorizontal: 18, marginTop: 15}}/>
           <AnimatedCurrency 
             style={{textAlign: 'right', marginRight: 15}}

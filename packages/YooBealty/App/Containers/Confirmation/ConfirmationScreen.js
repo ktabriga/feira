@@ -16,6 +16,7 @@ const makeProductLine = ({code, description, amount, price, total}) => {
     format(code, 4),
     format(description, 9),
     formatNumber(amount, 3),
+    '            '
     //formatMoney(price, 6),
     //formatMoney(total, 6),
   ]
@@ -71,11 +72,19 @@ export default class ConfirmationScreen extends Component {
       'Data da Autorização',
       simpleDateTimeNow()
     ]
+
+    await epos700.print('YOOFOOD E CIA LTDA', true)
+    await this.printLines(nfPpt1, false)
+    await this.printLines(nfPt2, true)
+    return await epos700.printQRCode('Essa NF é apenas uma demonstração feita pela YooPay')
+  }
+
+  handlePrint = async () => {
+    const {order: {products, method, split, total}} = this.props.navigation.state.params
+    for (const total of split) {
+      await this.printNote({total, products, method})
+    }
     const nfPt3 = [
-      '--------------------------------',
-      'Informações dos Tributos Totais Incidentes',
-      'Trib aprox R$: 2.28 Fed 2.10 Est',
-      'Fonte: IBT/FECOMERCIO Arf57',
       '________________________________',
       '',
       'ESTAB: 29384789        TERM: 923',
@@ -90,19 +99,7 @@ export default class ConfirmationScreen extends Component {
       '',
       '',
     ]
-
-    await epos700.print('YOOFOOD E CIA LTDA', true)
-    await this.printLines(nfPpt1, false)
-    await this.printLines(nfPt2, true)
-    await epos700.printQRCode('Essa NF é apenas uma demonstração feita pela YooPay')
-    return await this.printLines(nfPt3, false)
-  }
-
-  handlePrint = async () => {
-    const {order: {products, method, split}} = this.props.navigation.state.params
-    for (const total of split) {
-      await this.printNote({total, products, method})
-    }
+    await this.printLines(nfPt3, false)
   }
 
   printLines = async (data, isBold) => {
