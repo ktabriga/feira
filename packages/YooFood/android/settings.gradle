@@ -1,0 +1,9 @@
+rootProject.name = 'YooFood'
+include ':react-native-vector-icons'
+project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
+include ':react-native-epos700'
+project(':react-native-epos700').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-epos700/android')
+include ':ppcomp'
+project(':ppcomp').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-epos700/android/ppcomp')
+
+include ':app'

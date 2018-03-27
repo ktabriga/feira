@@ -1,0 +1,151 @@
+import React, { Component } from 'react'
+import { ScrollView, Text, Image, View, TextInput,  DeviceEventEmitter, Slider } from 'react-native'
+import {ScreenView, RoundedButton} from '../../Components'
+import {Colors, Images} from '../../Themes'
+import OrderValue from '../Order/OrderValue'
+import {connect} from 'react-redux'
+import PaymentActions from '../../Redux/PaymentRedux'
+import {getTotalValue, getOrder} from '../Order'
+import {currency} from '../../Lib/Money'
+import R from 'ramda'
+
+const findMaxValue = ({employes, ignore}) => {
+  return R.keys(employes).reduce((max, key) => {
+    if (key === ignore) return max 
+    if (employes[key] > max.value) {
+      return {
+        key,
+        value: employes[key]
+      }
+    }
+    return max
+  }, {key: '', value: 0})
+}
+
+const EmployeSplit = ({nome, image, value, onChange, maxValue}) => (
+  <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+    <View style={{alignItems: 'center', marginLeft: 10}}>
+      <Image 
+        resizeMode='cover'
+        style={{height: 60, width: 60}}
+        source={image}/>
+    </View>
+    <View style={{
+      flex: 1, 
+      height: 80,
+      justifyContent: 'center', 
+    }}>
+    <Text style={{color: Colors.grey, position: 'absolute', top: 5, left: 15}}>{nome}</Text>
+    <Text style={{
+      color: Colors.secondary, 
+      position: 'absolute',
+      fontWeight: 'bold',
+      right: 20,
+      top: 7
+    }}>{currency(value)}</Text>
+  <Slider 
+    value={value}
+    onSlidingComplete={onChange}
+    minimumTrackTintColor={Colors.secondary}
+    thumbTintColor={Colors.secondary}
+    minimumValue={0}
+    maximumValue={maxValue}/>
+  </View>
+</View>
+)
+
+export default class SplitScreen extends Component {
+  static navigationOptions = ({navigation}) => ({
+    title: 'SPLIT de Pagamentos',
+  })
+
+  constructor(props) {
+    super(props)
+    const totalValue = getTotalValue(props.navigation)
+    this.state = {
+      func1: totalValue,
+      func2: 0,
+      func3: 0,
+      func4: 0,
+    }
+  }
+
+  handlePayment = () => {
+    const {navigation} = this.props
+    const order = getOrder(navigation)
+    const totalValue = getTotalValue(this.props.navigation)
+    if (order.method === 'MONEY') {
+      this.props.navigation.navigate('ConfirmationScreen', {
+        order
+      })
+      return
+    }
+    this.props.navigation.navigate('PaymentScreen', {
+      totalValue,
+      order
+    })
+  }
+
+  recalculate = employe => value => {
+    const employes = this.state
+    const totalValue = getTotalValue(this.props.navigation)
+    const sum = R.keys(employes).reduce((acc, key) => {
+      if (key === employe) return acc
+      return acc + employes[key]
+    }, 0)
+    this.setState({
+      [employe]: value
+    })
+    if (sum + value > totalValue) {
+      setTimeout(() => {
+        this.setState({
+          [employe]: totalValue - sum
+        })
+      })
+      return
+    } 
+  }
+
+  render () {
+    const {navigation, startPayment} = this.props
+    const {current, password, func1, func2, func3, func4} = this.state
+    const totalValue = getTotalValue(navigation)
+    return (
+      <ScreenView color={Colors.white}>
+        <OrderValue value={totalValue}/>
+        <View style={{flex: 1, marginHorizontal: 15}}>
+          <EmployeSplit 
+            value={func1}
+            maxValue={totalValue}
+            onChange={this.recalculate('func1')}
+            nome='Marina'
+            image={Images.func2}/>
+          <EmployeSplit 
+            value={func2}
+            maxValue={totalValue}
+            onChange={this.recalculate('func2')}
+            nome='José'
+            image={Images.func1}/>
+          <EmployeSplit 
+            value={func3}
+            maxValue={totalValue}
+            onChange={this.recalculate('func3')}
+            nome='Cleide'
+            image={Images.func3}/>
+          <EmployeSplit 
+            value={func4}
+            maxValue={totalValue}
+            onChange={this.recalculate('func4')}
+            nome='Carla'
+            image={Images.func4}/>
+        </View>
+        <RoundedButton
+          style={{marginVertical: 20}}
+          color={Colors.secondary}
+          onPress={this.handlePayment}
+          text='Enviar'/>
+      </ScreenView>
+    )
+  }
+}
+
