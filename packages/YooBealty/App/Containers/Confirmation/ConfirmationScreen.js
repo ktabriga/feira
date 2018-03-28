@@ -35,7 +35,7 @@ const nfPt1Template = ({products, itemsAmount, total, paymentMethod}) => [
   'CNPJ: 94.271.971/0001-10',
   `DATA: ${simpleDateNow()}`,
   '--------------------------------',
-  'Documento Auxiliar de Nota Fiscal de Consumiduto Eletrônica',
+  'Documento Auxiliar de Nota Fiscal de Consumidor Eletrônica',
   '--------------------------------',
   'Detalhe da Venda',
   '--------------------------------',
