@@ -33,7 +33,7 @@ const nfPt1Template = ({products, itemsAmount, total, paymentMethod}) => [
   'CNPJ: 94.271.971/0001-10',
   `DATA: ${simpleDateNow()}`,
   '--------------------------------',
-  'Documento Auxiliar de Nota Fiscal de Consumiduto Eletrônica',
+  'Documento Auxiliar de Nota Fiscal de Consumiduor Eletrônica',
   '--------------------------------',
   'Detalhe da Venda',
   '--------------------------------',
@@ -66,6 +66,7 @@ export default class ConfirmationScreen extends Component {
     }), {total: 0, itemsAmount: 0})
     const nfPpt1 = nfPt1Template({products, paymentMethod: method, ...totals})
     const nfPt2 = [
+      'CONSUMIDOR NÂO IDENTIFICADO',
       'NFC-e nro 00004354 serie 0034',
       simpleDateTimeNow(),
       'Protocolo da Autorização:',

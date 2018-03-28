@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, Image, View } from 'react-native'
+import { ScrollView, Text, Image, View, TextInput, Keyboard } from 'react-native'
+import { TextInputMask } from 'react-native-masked-text'
 import { Colors } from '../../Themes'
 import {ScreenView, RoundedButton} from '../../Components'
 import epos700 from 'react-native-epos700'
 import {simpleDateNow, simpleDateTimeNow} from '../../Lib/Dates'
 import R from 'ramda'
 import './padPolyfill'
-import { NavigationActions } from 'react-navigation'
 
 const format = (value, size) => String(value).substring(0, size).padEnd(size)
 const formatMoney = (value, size) => value.toFixed(2).padStart(size)
@@ -17,9 +17,8 @@ const makeProductLine = ({code, description, amount, price, total}) => {
     format(code, 4),
     format(description, 9),
     formatNumber(amount, 3),
-    '            '
-    //formatMoney(price, 6),
-    //formatMoney(total, 6),
+    formatMoney(price, 6),
+    formatMoney(total, 6),
   ]
   return line.join(' ')
 }
@@ -35,12 +34,11 @@ const nfPt1Template = ({products, itemsAmount, total, paymentMethod}) => [
   'CNPJ: 94.271.971/0001-10',
   `DATA: ${simpleDateNow()}`,
   '--------------------------------',
-  'Documento Auxiliar de Nota Fiscal de Consumiduto Eletrônica',
+  'Documento Auxiliar de Nota Fiscal de Consumidor Eletrônica',
   '--------------------------------',
   'Detalhe da Venda',
   '--------------------------------',
-  'CODIG DESCRIC QTD               ',
-  //'3242 COCA-COLA   1  14,90  15,98',
+  'CODIG DESCRIC QTD VL.UNIT VL.TOT',
   ...products.map(makeProductLine),
   '--------------------------------',
   `QTD. TOTAL DE ITENS          ${formatNumber(itemsAmount, 3)}`,
@@ -50,7 +48,7 @@ const nfPt1Template = ({products, itemsAmount, total, paymentMethod}) => [
   `${paymentMethodDescription(paymentMethod)}             ${formatMoney(total, 6)}`,
   '--------------------------------',
   'Consulte pela Chave de Acesso em',
-  'https://nfse.fazend.pr.gov.br/nfse/NFeConsulta3',
+  'https://nfce.fazend.pr.gov.br/nfce/NFeConsulta3',
   '4118 4304 0542 3950 20345 20394',
   '--------------------------------',
 ]
@@ -60,13 +58,33 @@ export default class ConfirmationScreen extends Component {
     title: 'Pedido Realizado',
   })
 
-  printNote = async ({total, products, method}) => {
+  state = {
+    cpf: '',
+    keyboardIsShow: false
+  }
+
+  componentWillMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => this.setState({keyboardIsShow: true}))
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => this.setState({keyboardIsShow: false}))
+  }
+
+  componentWillUnmount () {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
+
+
+  handlePrint = async () => {
+    const {cpf: inputedCpf} = this.state
+    const cpf = inputedCpf.length >= 11 ? inputedCpf : null
+    const {order: {products, method}} = this.props.navigation.state.params
     const totals = products.reduce((acc, product) => ({
       itemsAmount: acc.itemsAmount + product.amount,
+      total: acc.total + product.total
     }), {total: 0, itemsAmount: 0})
-    const nfPpt1 = nfPt1Template({products, paymentMethod: method, ...totals, total})
+    const nfPpt1 = nfPt1Template({products, paymentMethod: method, ...totals})
     const nfPt2 = [
-      'CONSUMIDOR NÂO IDENTIFICADO',
+      cpf ?  `CONSUMIDOR CPF:${cpf}` : 'CONSUMIDOR NÂO IDENTIFICADO',
       'NFC-e nro 00004354 serie 0034',
       simpleDateTimeNow(),
       'Protocolo da Autorização:',
@@ -74,25 +92,13 @@ export default class ConfirmationScreen extends Component {
       'Data da Autorização',
       simpleDateTimeNow()
     ]
-
-    await epos700.print('YOOFOOD E CIA LTDA', true)
-    await this.printLines(nfPpt1, false)
-    await this.printLines(nfPt2, true)
-    return await epos700.printQRCode('Essa NF é apenas uma demonstração feita pela YooPay')
-  }
-
-  handlePrint = async () => {
-    const {order: {products, method, split, total}} = this.props.navigation.state.params
-    for (const total of split) {
-      await this.printNote({total, products, method})
-    }
     const nfPt3 = [
       '________________________________',
       '',
       'ESTAB: 29384789        TERM: 923',
       simpleDateTimeNow(),
       `1234********789 ${paymentMethodDescription(method)}`,
-      `VALOR: ${formatMoney(total, 6)}`,
+      `VALOR: ${formatMoney(totals.total, 6)}`,
       '',
       '',
       '',
@@ -101,6 +107,11 @@ export default class ConfirmationScreen extends Component {
       '',
       '',
     ]
+
+    await epos700.print('YOOFOOD E CIA LTDA', true)
+    await this.printLines(nfPpt1, false)
+    await this.printLines(nfPt2, true)
+    await epos700.printQRCode('Essa NF é apenas uma demonstração feita pela YooPay')
     await this.printLines(nfPt3, false)
   }
 
@@ -113,26 +124,33 @@ export default class ConfirmationScreen extends Component {
   }
 
   handleNewOrder = () => {
-    //this.props.navigation.goBack()
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'OrderScreen' })],
-    })
-    this.props.navigation.dispatch(resetAction)
+    this.props.navigation.goBack()
   }
 
   render () {
     return (
       <ScreenView padding>
-        <View style={{alignItems: 'center'}}>
-          <Text style={{color: Colors.primary, fontSize: 22, fontWeight: 'bold'}}>
-            Seu pedido foi realizado.
-          </Text>
-          <Text style={{color: Colors.primary, fontSize: 22, fontWeight: 'bold'}}>
-            Obrigado!
-          </Text>
-        </View>
+        {
+          this.state.keyboardIsShow ? null : (
+            <View style={{alignItems: 'center'}}>
+              <Text style={{color: Colors.primary, fontSize: 22, fontWeight: 'bold'}}>
+                Seu pedido foi realizado.
+              </Text>
+              <Text style={{color: Colors.primary, fontSize: 22, fontWeight: 'bold'}}>
+                Obrigado!
+              </Text>
+            </View>
+          )
+        }
         <View style={{flex: 1, justifyContent: 'center'}}>
+          <View>
+            <Text style={{color: Colors.primary}}>Informe seu CPF</Text>
+            <TextInputMask
+              type='cpf'
+              underlineColorAndroid={Colors.primary}
+              value={this.state.cpf}
+              onChangeText={cpf => this.setState({cpf})}/>
+          </View>
           <RoundedButton
             onPress={this.handlePrint}
             style={{marginHorizontal: 0}}
