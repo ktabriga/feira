@@ -50,9 +50,10 @@ class PaymentScreen extends Component {
       <ScreenView color={Colors.white}>
         <OrderValue value={navigation.state.params.totalValue}/>
         <View style={{padding: 20}}>
-          <Step label='Insira o Cartão' active={current === 'CARD'}/>
           <Step 
-            label='Informe a Senha' 
+            label='1 - Insira o Cartão' active={current === 'CARD'}/>
+          <Step 
+            label='2 - Informe a Senha' 
             active={current === 'PASSWORD'}
             style={{marginTop: 10}} >
             <TextInput 
@@ -61,6 +62,7 @@ class PaymentScreen extends Component {
               onChangeText={password => this.setState({password})}
               keyboardType='numeric'
               maxLength={4}
+              style={{fontSize: 40}}
               secureTextEntry
               underlineColorAndroid={Colors.primary}/>
             <RoundedButton 

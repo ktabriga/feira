@@ -86,12 +86,6 @@ export default class ConfirmationScreen extends Component {
       `1234********789 ${paymentMethodDescription(method)}`,
       `VALOR: ${formatMoney(totals.total, 6)}`,
       '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
     ]
 
     await epos700.print('YOOFOOD E CIA LTDA', true)
@@ -99,6 +93,7 @@ export default class ConfirmationScreen extends Component {
     await this.printLines(nfPt2, true)
     await epos700.printQRCode('Essa NF é apenas uma demonstração feita pela YooPay')
     await this.printLines(nfPt3, false)
+    await epos700.printPaper()
   }
 
   printLines = async (data, isBold) => {

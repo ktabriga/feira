@@ -108,7 +108,7 @@ export default class ConfirmationScreen extends Component {
       '',
     ]
 
-    await epos700.print('YOOFOOD E CIA LTDA', true)
+    await epos700.print('YOO GÁS E CIA LTDA', true)
     await this.printLines(nfPpt1, false)
     await this.printLines(nfPt2, true)
     await epos700.printQRCode('Essa NF é apenas uma demonstração feita pela YooPay')

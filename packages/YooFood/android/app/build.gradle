@@ -116,6 +116,7 @@ android {
                 keyPassword YOOPAY_RELEASE_KEY_PASSWORD
             }
         }
+
     }
     splits {
         abi {
@@ -126,6 +127,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"

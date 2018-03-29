@@ -55,7 +55,7 @@ export default ({ReactNative: {StyleSheet, Animated}, AnimateNumber}) => {
       return (
         <AnimateNumber
           interval={7}
-          style={{color: interpolateColor, fontSize: 24, fontWeight: 'bold', ...style}}
+          style={{color: interpolateColor, fontSize: 30, fontWeight: 'bold', ...style}}
           formatter={toMoney}
           value={this.props.value}/>
       )

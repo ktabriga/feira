@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 export default ({ReactNative: {StyleSheet, TouchableOpacity, Text}, Theme: {Fonts, Colors, Metrics}}) => {
   const styles = StyleSheet.create({                                  
     button: {                                                         
-        height: 50,                                                     
+        height: 70,                                                     
         borderRadius: 5,                                                
         marginHorizontal: Metrics.section,                              
         marginVertical: Metrics.baseMargin,                             
@@ -14,7 +14,7 @@ export default ({ReactNative: {StyleSheet, TouchableOpacity, Text}, Theme: {Font
         color: Colors.snow,                                             
         textAlign: 'center',                                            
         fontWeight: 'bold',                                             
-        fontSize: Fonts.size.regular,                                   
+        fontSize: Fonts.size.regular * 1.3,                                   
         marginVertical: Metrics.baseMargin                              
       }                                                                 
   })                                                                  
