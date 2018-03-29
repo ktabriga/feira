@@ -102,6 +102,7 @@ export default class ConfirmationScreen extends Component {
       '',
     ]
     await this.printLines(nfPt3, false)
+    await epos700.printPaper()
   }
 
   printLines = async (data, isBold) => {

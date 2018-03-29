@@ -50,14 +50,15 @@ class PaymentScreen extends Component {
       <ScreenView color={Colors.white}>
         <OrderValue value={navigation.state.params.totalValue}/>
         <View style={{padding: 20}}>
-          <Step label='Insira o Cartão' active={current === 'CARD'}/>
+          <Step label='1 - Insira o Cartão' active={current === 'CARD'}/>
           <Step 
-            label='Informe a Senha' 
+            label='2 - Informe a Senha' 
             active={current === 'PASSWORD'}
             style={{marginTop: 10}} >
             <TextInput 
               value={password}
               autoFocus
+              style={{fontSize: 40}}
               onChangeText={password => this.setState({password})}
               keyboardType='numeric'
               maxLength={4}

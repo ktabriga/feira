@@ -137,6 +137,7 @@ export default class OrderScreen extends Component {
             products={availableProducts}/>
         </View>
         <PaymentMethod 
+          style={{marginBottom: 30}}
           onChange={method => this.setState({method})}
           selected={this.state.method}/>
         <RoundedButton

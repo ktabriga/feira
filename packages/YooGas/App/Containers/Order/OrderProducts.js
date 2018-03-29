@@ -9,16 +9,16 @@ export const toCurrency = x => numeral(x).format('$ 0,0.00')
 
 
 const Label = ({label}) => (
-  <Text style={{fontSize: 11, color: Colors.darkGrey}}>{label}</Text>
+  <Text style={{fontSize: 16, color: Colors.darkGrey}}>{label}</Text>
 )
 
 const Amount = ({value}) => {
   if (!value) return null
   return (
-    <View style={{height: 20, width: 20, borderRadius: 10, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center', position: 'absolute', top: 0, left: 0}}>
+    <View style={{height: 30, width: 30, borderRadius: 15, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center', position: 'absolute', top: 0, left: 0}}>
       <Text
         style={{
-          fontSize: 12,
+          fontSize: 16,
           fontWeight: 'bold',
           color: Colors.white
         }}>
@@ -29,7 +29,7 @@ const Amount = ({value}) => {
 }
 
 const Product = ({product = {}, onPress, amount}) => (
-  <View style={{padding: 5, flex: 1, height: 105}}>
+  <View style={{padding: 5, flex: 1, height: 160}}>
     <TouchableOpacity
       style={{
         flex: 1,
@@ -40,7 +40,7 @@ const Product = ({product = {}, onPress, amount}) => (
       }}
       onPress={() => onPress && onPress(product)}>
       <Image
-        style={{height: 54, width: 70, resizeMode: 'cover'}}
+        style={{height: 90, width: 100, resizeMode: 'cover'}}
         source={product.image}/>
       <Label label={product.name} />
       <Label label={toCurrency(product.price)} />
@@ -73,4 +73,3 @@ export default class OrderProducts extends Component {
     )
   }
 }
-

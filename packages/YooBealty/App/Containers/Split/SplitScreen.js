@@ -24,27 +24,29 @@ const findMaxValue = ({employes, ignore}) => {
 }
 
 const EmployeSplit = ({nome, image, value, onChange, maxValue}) => (
-  <View style={{flexDirection: 'row', alignItems: 'center', paddingTop: 5}}>
+  <View style={{flexDirection: 'row', alignItems: 'center', paddingTop: 5, marginBottom: 40}}>
     <View style={{alignItems: 'center', marginLeft: 10}}>
       <Image 
         resizeMode='cover'
-        style={{height: 60, width: 60}}
+        style={{height: 90, width: 90}}
         source={image}/>
     </View>
     <View style={{
       flex: 1, 
       height: 70,
       justifyContent: 'center'}}>
-      <Text style={{color: Colors.grey, position: 'absolute', top: 5, left: 15}}>{nome}</Text>
+      <Text style={{color: Colors.grey, position: 'absolute', fontSize: 16, top: 5, left: 15}}>{nome}</Text>
       <Text style={{
         color: Colors.secondary, 
         position: 'absolute',
         fontWeight: 'bold',
-        right: 20,
-        top: 7
+        fontSize: 20,
+        right: 17,
+        top: 7,
       }}>{currency(value)}</Text>
     <Slider 
       value={value}
+      style={{marginTop: 14}}
       onSlidingComplete={onChange}
       minimumTrackTintColor={Colors.secondary}
       thumbTintColor={Colors.secondary}
@@ -149,7 +151,7 @@ export default class SplitScreen extends Component {
             image={Images.func3}/>
           <View style={{borderWidth: 0.8, borderColor: Colors.lightGrey2, marginHorizontal: 18, marginTop: 15}}/>
           <AnimatedCurrency 
-            style={{textAlign: 'right', marginRight: 15}}
+            style={{textAlign: 'right', marginRight: 15, marginTop: 10}}
             color={totalValue === distributedTotal ? Colors.secondary : Colors.warning}
             value={distributedTotal}/>
         </View>

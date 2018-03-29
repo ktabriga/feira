@@ -17,6 +17,9 @@ const PrimaryNav = StackNavigator({
   initialRouteName: 'OrderScreen',
   navigationOptions: {
     //headerStyle: styles.header
+    headerStyle: {
+      height: 70
+    }
   }
 })
 

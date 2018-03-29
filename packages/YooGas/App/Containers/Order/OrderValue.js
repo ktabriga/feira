@@ -10,11 +10,11 @@ export default function OrderValue({value}) {
       flexDirection: 'row', 
       justifyContent: 'space-between', 
       padding: 0, 
-      height: 50, 
+      height: 70, 
       paddingLeft: 20, 
       paddingRight: 20,
       alignItems: 'center' }}>
-      <Text style={{color: Colors.white}}>Valor Total</Text>
+      <Text style={{color: Colors.white, fontSize: 20}}>Valor Total</Text>
       <AnimatedCurrency 
         color={Colors.white}
         value={value}/>
