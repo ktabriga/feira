@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "apisauce": "^0.14.2",
+    "buffer": "^5.1.0",
     "create-react-context": "^0.2.1",
     "format-json": "^1.0.3",
     "identity-obj-proxy": "^3.0.0",

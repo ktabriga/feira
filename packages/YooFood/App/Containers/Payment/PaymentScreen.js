@@ -8,7 +8,7 @@ import PaymentActions from '../../Redux/PaymentRedux'
 import epos700 from 'react-native-epos700'    
 
 const mapDispatchToProps = (dispatch, {navigation: {state: {params}}}) => ({
-  startPayment: () => dispatch(PaymentActions.startPayment(params.order))
+  startPayment: () => dispatch(PaymentActions.startPayment(params))
 })
 
 const Step = ({label, active, children, style}) => (

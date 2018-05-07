@@ -46,7 +46,7 @@ export default ({ReactNative: {StyleSheet, Animated}, AnimateNumber}) => {
     }
 
     render() {
-      const {value, color} = this.state
+      const {color} = this.state
       const {color: initialColor = 'rgb(38,38,38)', style} = this.props
       const interpolateColor = this.animatedValue.interpolate({
         inputRange: [0, 20, 150],

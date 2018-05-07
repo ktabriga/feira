@@ -91,8 +91,8 @@ export default class OrderScreen extends Component {
   }
 
   handlePayment = () => {
-  const {selectedProducts} = this.state
-  const products = R.keys(selectedProducts)
+    const {selectedProducts} = this.state
+    const products = R.keys(selectedProducts)
       .map(id => selectedProducts[id])
       .map(({id, amount}) => {
         const {name, price, code} = R.find(R.propEq('id', id), availableProducts)
