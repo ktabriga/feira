@@ -36,7 +36,6 @@ const  generateTransaction = ({
   paymentMethod,
   value
 }) => {
-  const feeValue = ns.integerInRange(100, 400)
   const creditCard = generateCreditCard()
   return {
     hid: hid,
@@ -49,9 +48,7 @@ const  generateTransaction = ({
     productItemId: product,
     createdAt: now(),
     updatedAt: now(),
-    value: value * 100,
-    feeValue,
-    valueLiquid: value * 100 - feeValue,
+    value: Math.round(value * 100),
     cardNumber: creditCard.number,
     holderName: creditCard.owner,
     cardBrand: creditCard.brand
